@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { exportMarkdownNote, importMarkdownNote } from "./api";
+import { exportMarkdownNote, exportMarkdownPDF, importMarkdownNote } from "./api";
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
@@ -91,6 +91,15 @@ describe("importExport api", () => {
       defaultPath: `${"x".repeat(79)}😀.md`,
       filters: [{ name: "Markdown", extensions: ["md"] }],
     });
+    expect(invoke).not.toHaveBeenCalled();
+  });
+
+  test("exports PDF through the rendered-preview callback when provided", async () => {
+    mockedSave.mockResolvedValue("D:\\exports\\公式.pdf");
+    const renderPdf = vi.fn().mockResolvedValue(undefined);
+
+    await expect(exportMarkdownPDF({ id: "note-1", title: "公式" }, renderPdf)).resolves.toBe(true);
+    expect(renderPdf).toHaveBeenCalledWith("D:\\exports\\公式.pdf");
     expect(invoke).not.toHaveBeenCalled();
   });
 });

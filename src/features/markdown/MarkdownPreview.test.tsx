@@ -29,4 +29,14 @@ describe("MarkdownPreview", () => {
     expect(preCloseIndex).toBeGreaterThan(-1);
     expect(buttonIndex).toBeGreaterThan(preCloseIndex);
   });
+
+  test("renders LaTeX display math and GFM tables used by PDF export", () => {
+    const content =
+      "# 研究笔记\n\n$$\n\\mathcal G = \\left\\{(\\boldsymbol\\mu_i, \\boldsymbol\\Sigma_i)\\right\\}_{i=1}^{N}\n$$\n\n| 方法 | 数值 |\n| --- | ---: |\n| A | 1 |";
+    const markup = renderToStaticMarkup(<MarkdownPreview content={content} eagerImages />);
+
+    expect(markup).toContain("katex-display");
+    expect(markup).toContain("<table");
+    expect(markup).not.toContain("katex-error");
+  });
 });

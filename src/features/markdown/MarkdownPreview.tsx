@@ -69,6 +69,7 @@ interface MarkdownPreviewProps {
   fontSize?: number;
   renderHtml?: boolean;
   imageBaseDir?: string;
+  eagerImages?: boolean;
 }
 
 const remarkPlugins = [remarkGfm, remarkMath, remarkAlerts];
@@ -282,6 +283,7 @@ export function MarkdownPreview({
   fontSize = 14,
   renderHtml = false,
   imageBaseDir,
+  eagerImages = false,
 }: MarkdownPreviewProps) {
   const { t } = useTranslation();
   const components = useMemo<Components>(
@@ -293,14 +295,14 @@ export function MarkdownPreview({
           <img
             src={resolvedSrc}
             alt={alt ?? ""}
-            loading="lazy"
+            loading={eagerImages ? "eager" : "lazy"}
             className="w-[50%] rounded my-2 mx-auto block"
             {...props}
           />
         );
       },
     }),
-    [imageBaseDir],
+    [imageBaseDir, eagerImages],
   );
   return (
     <div className="font-body markdown-selectable" style={{ fontSize: `${fontSize}px` }}>

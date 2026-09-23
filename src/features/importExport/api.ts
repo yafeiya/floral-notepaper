@@ -38,7 +38,10 @@ export async function exportMarkdownNote(note: ExportableNote): Promise<boolean>
   return true;
 }
 
-export async function exportMarkdownPDF(note: ExportableNote): Promise<boolean> {
+export async function exportMarkdownPDF(
+  note: ExportableNote,
+  renderPdf?: (path: string) => Promise<void>,
+): Promise<boolean> {
   const path = await save({
     defaultPath: pdfFileName(note.title),
     filters: [{ name: "PDF", extensions: ["pdf"] }],
@@ -56,7 +59,11 @@ export async function exportMarkdownPDF(note: ExportableNote): Promise<boolean> 
     caution: t("markdown.alert.caution"),
   };
 
-  await invoke("notes_export_pdf", { id: note.id, path, admonitionLabels });
+  if (renderPdf) {
+    await renderPdf(path);
+  } else {
+    await invoke("notes_export_pdf", { id: note.id, path, admonitionLabels });
+  }
   return true;
 }
 

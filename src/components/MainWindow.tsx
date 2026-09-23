@@ -18,6 +18,7 @@ import {
   exportMarkdownPDF,
   importMarkdownNote,
 } from "../features/importExport/api";
+import { printPreviewPdf } from "../features/importExport/printPreviewPdf";
 import { MarkdownPreviewLazy as MarkdownPreview } from "../features/markdown/MarkdownPreviewLazy";
 import { showToast } from "./Toast";
 import {
@@ -1523,10 +1524,25 @@ export function MainWindow({
         if (!saved) return;
       }
 
-      await exportMarkdownPDF({
-        id: note.id,
-        title: note.id === selectedId ? title : note.title,
-      });
+      const isWindows = navigator.userAgent.includes("Windows");
+      const noteContent = isWindows ? (await getNote(note.id)).content : "";
+      await exportMarkdownPDF(
+        {
+          id: note.id,
+          title: note.id === selectedId ? title : note.title,
+        },
+        isWindows
+          ? (path) =>
+              printPreviewPdf(path, {
+                content: noteContent,
+                pageSize: settingsConfig?.exportPageSize ?? "a4",
+                fontFamily: settingsConfig?.exportFontFamily ?? "HarmonyOS Sans SC",
+                fontSize: settingsConfig?.exportFontSize ?? 14,
+                renderHtml: settingsConfig?.renderHtmlMarkdown ?? false,
+                imageBaseDir: imageBaseDir ?? undefined,
+              })
+          : undefined,
+      );
     } catch (error) {
       showToast(getErrorMessage(error));
     }

@@ -75,6 +75,21 @@ fn notes_export_pdf(
 }
 
 #[tauri::command]
+async fn webview_export_pdf(
+    window: tauri::WebviewWindow,
+    path: String,
+    page_size: String,
+) -> Result<(), AppError> {
+    services::webview_pdf::export_rendered_page(window, &PathBuf::from(path), &page_size)
+        .await
+        .map_err(|message| AppError {
+            code: "exportPdf".into(),
+            message,
+            details: Default::default(),
+        })
+}
+
+#[tauri::command]
 fn read_external_file(path: String) -> Result<String, AppError> {
     std::fs::read_to_string(&path).map_err(|e| AppError {
         code: "io".into(),
@@ -488,6 +503,7 @@ pub fn run() {
             notes_import_markdown,
             notes_export_markdown,
             notes_export_pdf,
+            webview_export_pdf,
             notes_move_category,
             read_external_file,
             save_external_file,

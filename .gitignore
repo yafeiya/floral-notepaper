@@ -64,6 +64,7 @@ src/generated/contributors.json
 
 ## Temp
 temp/
+tmp/
 nul
 tsconfig.tsbuildinfo
 Docs/windows-install-chain-code-review.md
