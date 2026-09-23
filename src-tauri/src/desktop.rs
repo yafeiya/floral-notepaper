@@ -2601,6 +2601,9 @@ mod tests {
             toggle_visibility_shortcut: toggle_visibility_shortcut.into(),
             notes_dir: None,
             last_known_base_dir: None,
+            export_page_size: "a4".into(),
+            export_font_family: "HarmonyOS Sans".into(),
+            export_font_size: 14,
         }
     }
 
@@ -2686,6 +2689,9 @@ mod tests {
             toggle_visibility_shortcut: String::new(),
             notes_dir: None,
             last_known_base_dir: None,
+            export_page_size: "a4".into(),
+            export_font_family: "HarmonyOS Sans".into(),
+            export_font_size: 14,
         };
         let next = AppConfig {
             locale: "en-US".into(),
@@ -2723,6 +2729,9 @@ mod tests {
             toggle_visibility_shortcut: "Ctrl+Shift+H".into(),
             notes_dir: None,
             last_known_base_dir: None,
+            export_page_size: "a4".into(),
+            export_font_family: "HarmonyOS Sans".into(),
+            export_font_size: 14,
         };
 
         assert_eq!(
